@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.db
+.env
+.env.*
+deploy/.release-approval
+.claude/skills/
+.claude/hooks/
+metrics.jsonl

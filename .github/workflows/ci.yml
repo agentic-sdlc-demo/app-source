@@ -1,0 +1,29 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Governance sync + drift check
+        env:
+          GITHUB_TOKEN: ${{ secrets.SDLC_GITHUB_TOKEN }}
+        run: |
+          bash scripts/sync-governance.sh
+          bash scripts/sync-governance.sh --check
+
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Placeholder until Phase 3 lands the app: lint/test/build run here.
+      - name: Test
+        run: |
+          if [ -f package.json ]; then npm ci && npm test; else echo "no app yet (pre-Phase 3)"; fi

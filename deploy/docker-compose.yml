@@ -1,0 +1,28 @@
+services:
+  tasklist-staging:
+    image: tasklist:${TASKLIST_TAG:-latest}
+    container_name: tasklist-staging
+    ports:
+      - "8090:3000"
+    environment:
+      - NODE_ENV=staging
+      - DB_PATH=/data/tasklist.db
+    volumes:
+      - staging-data:/data
+    restart: unless-stopped
+
+  tasklist-prod:
+    image: tasklist:${TASKLIST_TAG:-latest}
+    container_name: tasklist-prod
+    ports:
+      - "8091:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_PATH=/data/tasklist.db
+    volumes:
+      - prod-data:/data
+    restart: unless-stopped
+
+volumes:
+  staging-data:
+  prod-data:
