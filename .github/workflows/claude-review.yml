@@ -1,0 +1,11 @@
+name: claude-review
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    # Requires sdlc-control PR #3 (moving reusable workflows into
+    # .github/workflows/) merged to main before this can resolve.
+    uses: agentic-sdlc-demo/sdlc-control/.github/workflows/claude-review.yml@main
+    secrets: inherit
