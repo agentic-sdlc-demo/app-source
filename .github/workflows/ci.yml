@@ -23,7 +23,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      # Placeholder until Phase 3 lands the app: lint/test/build run here.
-      - name: Test
-        run: |
-          if [ -f package.json ]; then npm ci && npm test; else echo "no app yet (pre-Phase 3)"; fi
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image (verification only — no push, no deploy)
+        run: docker build -t tasklist:ci .
+      # Actual deploys are a manual step (deploy/deploy.sh) run on the demo
+      # host — no self-hosted runner or CI-triggered deploy in this demo.
