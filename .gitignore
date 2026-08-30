@@ -1,6 +1,7 @@
 node_modules/
 dist/
 *.db
+*.tsbuildinfo
 .env
 .env.*
 deploy/.release-approval

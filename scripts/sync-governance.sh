@@ -16,9 +16,14 @@ trap 'rm -rf "$TMP"' EXIT
 
 CLONE_ARGS=(--depth 1 --branch "$REF" "$REPO_URL" "$TMP/gov")
 if [[ -n "${GITHUB_TOKEN:-}" ]]; then
-  # CI: authenticate with the workflow secret; never echoed.
-  git -c http.extraheader="AUTHORIZATION: bearer $GITHUB_TOKEN" clone "${CLONE_ARGS[@]}" -q
+  # CI: authenticate with the workflow secret using Basic auth, the scheme
+  # GitHub's git-over-HTTPS actually expects (matches what actions/checkout
+  # itself sets up) — a Bearer header here is silently rejected and git
+  # falls back to an interactive prompt, which fails non-interactively.
+  AUTH_B64="$(printf '%s' "x-access-token:$GITHUB_TOKEN" | base64 | tr -d '\n')"
+  git -c http.extraheader="AUTHORIZATION: basic $AUTH_B64" clone "${CLONE_ARGS[@]}" -q
 else
+  # sdlc-control is public, so an unauthenticated clone also works (local dev).
   git clone "${CLONE_ARGS[@]}" -q
 fi
 
