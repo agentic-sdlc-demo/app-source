@@ -1,0 +1,12 @@
+name: security-scan
+on:
+  schedule:
+    - cron: "0 6 * * 1" # weekly, Monday 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  scan:
+    # Requires sdlc-control PR #3 (moving reusable workflows into
+    # .github/workflows/) merged to main before this can resolve.
+    uses: agentic-sdlc-demo/sdlc-control/.github/workflows/security-scan.yml@main
+    secrets: inherit
