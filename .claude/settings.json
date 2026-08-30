@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(.config/github.token)",
+      "Read(**/.env)",
+      "Read(**/.env.*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/deploy-gate.sh\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && [ -f package.json ] && npm test --silent && npm run lint --silent || true"
+          }
+        ]
+      }
+    ]
+  }
+}
